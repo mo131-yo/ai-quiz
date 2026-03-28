@@ -1,6 +1,5 @@
-// // src/app/api/webhooks/clerk/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma"; // Замаа өөрийнхөөрөө шалгаарай
+import { prisma } from "@/lib/prisma"; 
 import { Webhook } from 'svix';
 import { WebhookEvent } from '@clerk/nextjs/server';
 

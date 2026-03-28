@@ -1,5 +1,3 @@
-// app/api/users/[userId]/articles/route.ts
-
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
@@ -9,21 +7,18 @@ export async function GET(
   { params }: { params: { userId: string } }
 ) {
   try {
-    // 1. Clerk-ээс нэвтэрсэн эсэхийг шалгах
     const { userId: currentUserId } = await auth();
     if (!currentUserId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // 2. Тухайн userId-тай холбоотой Article-уудыг шүүж авах
     const articles = await prisma.article.findMany({
       where: {
         userId: params.userId,
       },
       orderBy: {
-        createdAt: "desc", // Хамгийн сүүлийнхийг дээр нь
+        createdAt: "desc",
       },
-      // Хэрэв квизүүдийн тоог хармаар байвал count нэмж болно
       include: {
         _count: {
           select: { quizzes: true }

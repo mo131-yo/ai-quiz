@@ -6,14 +6,13 @@ export async function POST(request: Request){
         const body = await request.json(); 
         const { email, id } = body;
         
-    // Энийг ингэж засах хэрэгтэй:
-const user = await prisma.user.create({
-    data: {
-        email: email, // body-оос ирсэн email-ийг ашиглах
-        name: "User Name", // энийг бас body-оос авч болно
-        clerkId: id,   // body-оос ирсэн id-ийг ашиглах
-    }
-});
+        const user = await prisma.user.create({
+            data: {
+                email: email,
+                name: "User Name", 
+                clerkId: id,
+            }
+        });
         return NextResponse.json({message: "Bolson", user}, {status: 200})
     } catch (error) {
     console.error("Prisma Error:", error); 

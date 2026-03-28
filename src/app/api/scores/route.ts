@@ -1,14 +1,3 @@
-// import { NextResponse } from "next/server";
-// import { prisma } from "@/lib/prisma";
-// import { auth } from "@clerk/nextjs/server";
-
-// export async function POST(request: Request) {}
-
-// export async function GET(request: Request) {}
-
-
-
-
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
@@ -23,7 +12,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // 1. Find the internal Prisma User ID using the Clerk ID
     const dbUser = await prisma.user.findUnique({
       where: { clerkId: clerkId },
     });
@@ -32,11 +20,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "User not found in database" }, { status: 404 });
     }
 
-    // 2. Use the dbUser.id (the CUID) to create the score
     const newScore = await prisma.userScore.create({
       data: {
         articleId: articleId,
-        userId: dbUser.id, // Use the internal ID, not the Clerk string
+        userId: dbUser.id,
         score: Number(score),
         timeSpent: Number(timeSpent),
       },
@@ -49,7 +36,6 @@ export async function POST(req: Request) {
   }
 }
 
-// 3. Add the GET method to fix the 405 error in your logs
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);

@@ -1,9 +1,3 @@
-// import { NextResponse } from "next/server";
-
-// export async function GET(request: Request, { params }: { params: { id: string } }) {}
-
-
-
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
@@ -12,12 +6,12 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params; // URL-аас ID-г салгаж авах
+    const { id } = params;
 
     const article = await prisma.article.findUnique({
       where: { id: id },
       include: {
-        quizzes: true, // Хэрэв артиклтайгаа цуг квизүүдийг нь авмаар байвал
+        quizzes: true,
       },
     });
 

@@ -1,63 +1,7 @@
-// import { NextResponse } from "next/server";
-// import { auth } from "@clerk/nextjs/server";
-// import { prisma } from "@/lib/prisma";
-
-// export async function GET() {}
-
-// export async function POST(request: Request) {}
-
-
-// import { NextResponse } from "next/server";
-// import { prisma } from "@/lib/prisma";
-// import { auth } from "@clerk/nextjs/server";
-
-// export async function GET() {
-//   try {
-//     const articles = await prisma.article.findMany({
-//       orderBy: { createdAt: "desc" },
-//     });
-//     // Хэрэв дата байхгүй бол хоосон массив буцаах (SyntaxError-оос сэргийлнэ)
-//     return NextResponse.json(articles || []);
-//   } catch (error) {
-//     console.error("GET Articles Error:", error);
-//     return NextResponse.json({ error: "Failed to fetch" }, { status: 500 });
-//   }
-// }
-
-// export async function POST(request: Request) {
-//   try {
-//     const { userId: clerkId } = await auth();
-//     if (!clerkId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-//     // DB-ээс хэрэглэгчийн жинхэнэ ID-г олох
-//     const user = await prisma.user.findUnique({ where: { clerkId } });
-//     if (!user) return NextResponse.json({ error: "User not synced" }, { status: 404 });
-
-//     const body = await request.json();
-//     const { title, content, summary } = body;
-
-//     const article = await prisma.article.create({
-//       data: {
-//         title,
-//         content,
-//         summary,
-//         userId: user.id, // Clerk-ийн ID биш, DB-ийн CUID-г ашиглана
-//       },
-//     });
-
-//     return NextResponse.json(article, { status: 201 });
-//   } catch (error) {
-//     console.error("POST Article Error:", error);
-//     return NextResponse.json({ error: "Failed to save article" }, { status: 500 });
-//   }
-// }
-
-
 import { NextResponse } from "next/server";
 import { syncUser } from "@/lib/sync-user";
 import { prisma } from "@/lib/prisma";
 
-// 1. Бүх артикулуудыг авах (Sidebar-д зориулагдсан)
 export async function GET() {
   try {
     const dbUser = await syncUser();
@@ -67,7 +11,7 @@ export async function GET() {
     }
 
     const articles = await prisma.article.findMany({
-      where: { userId: dbUser.id }, // Зөвхөн тухайн хэрэглэгчийн артикулуудыг харуулна
+      where: { userId: dbUser.id },
       orderBy: { createdAt: "desc" },
     });
 
@@ -78,7 +22,6 @@ export async function GET() {
   }
 }
 
-// 2. Шинэ артикл хадгалах
 export async function POST(request: Request) {
   try {
     const dbUser = await syncUser();
